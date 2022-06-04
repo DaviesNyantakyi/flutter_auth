@@ -7,7 +7,6 @@ import 'package:flutter_auth/services/fire_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-// TODO: Logout anon user when they deside to sign up with google, email.
 class FireAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -111,14 +110,23 @@ class FireAuth {
         if (email != null) {
           final credential =
               EmailAuthProvider.credential(email: email, password: password);
-          await FirebaseAuth.instance.currentUser!.reauthenticateWithCredential(
+          _firebaseAuth.currentUser?.reauthenticateWithCredential(
             credential,
           );
           await _firebaseAuth.currentUser?.reload();
           await FireStorage().deleteProfileImage();
           await _cloudFire.deleteUserInfo();
+
           await _firebaseAuth.currentUser?.delete();
+          await logout();
         }
+      }
+      if (_firebaseAuth.currentUser?.providerData[0].providerId ==
+          'google.com') {
+        await _firebaseAuth.currentUser?.reload();
+        await FireStorage().deleteProfileImage();
+        await _cloudFire.deleteUserInfo();
+        await _firebaseAuth.currentUser?.delete();
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -147,6 +155,10 @@ class FireAuth {
       final result = await InternetConnectionChecker().hasConnection;
 
       if (result) {
+        if (_firebaseAuth.currentUser?.isAnonymous == true) {
+          await _firebaseAuth.currentUser?.delete();
+          await _firebaseAuth.signOut();
+        }
         // Show the authentication flow (dialog).
         final googleUser = await _googleSignIn.signIn();
 
@@ -169,7 +181,6 @@ class FireAuth {
               id: _firebaseAuth.currentUser?.uid,
               userName: _firebaseAuth.currentUser!.displayName!,
               email: _firebaseAuth.currentUser!.email!,
-              photoURL: _firebaseAuth.currentUser?.photoURL,
             );
             await _cloudFire.createUser(user: user);
           }

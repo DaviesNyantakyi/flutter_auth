@@ -68,11 +68,11 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
             },
           ),
           TextButton(
+            onPressed: updateEmail,
             child: const Text(
               'Update',
               style: TextStyle(color: Colors.black),
             ),
-            onPressed: updateEmail,
           )
         ],
       );
@@ -99,10 +99,12 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
           password: passwordCntlr.text,
         );
         if (success) {
-          Navigator.of(context)
-            ..pop()
-            ..pop()
-            ..pop();
+          if (mounted) {
+            Navigator.of(context)
+              ..pop()
+              ..pop()
+              ..pop();
+          }
         }
       }
     } on FirebaseException catch (e) {
@@ -186,8 +188,8 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
 
   Widget _buildUpateButton() {
     return ElevatedButton(
-      child: const Text('Update'),
       onPressed: showEmailDialog,
+      child: const Text('Update'),
     );
   }
 }

@@ -45,7 +45,9 @@ class _EditNameScreenState extends State<EditNameScreen> {
           nameCntlr?.text.trim() != user?.displayName) {
         await fireAuth.updateDisplayName(displayName: nameCntlr!.text);
       }
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
     } catch (e) {
@@ -94,8 +96,8 @@ class _EditNameScreenState extends State<EditNameScreen> {
 
   Widget _buildUpateButton() {
     return ElevatedButton(
-      child: const Text('Update'),
       onPressed: update,
+      child: const Text('Update'),
     );
   }
 }

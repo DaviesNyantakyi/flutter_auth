@@ -16,7 +16,7 @@ class MyImagePicker {
   File? image;
   bool _delete = false;
 
-  final FirebaseAuth? _auth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   final ImagePicker _picker = ImagePicker();
 
@@ -247,7 +247,7 @@ class MyImagePicker {
 
   Widget showDeleteButton({required BuildContext context}) {
     // Show the delete button if firbase photourl is not null
-    if (_auth?.currentUser?.photoURL != null) {
+    if (_firebaseAuth.currentUser?.photoURL != null) {
       return _selectionTile(
         context: context,
         icon: Icons.delete_outline,

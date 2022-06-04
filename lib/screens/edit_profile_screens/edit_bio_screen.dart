@@ -45,7 +45,9 @@ class _EditBioScreenState extends State<EditBioScreen> {
       if (bioCntlr?.text != null && bioCntlr?.text.trim() != widget.bio) {
         await coudFire.updateBio(bio: bioCntlr?.text);
       }
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
     } catch (e) {
@@ -93,8 +95,8 @@ class _EditBioScreenState extends State<EditBioScreen> {
 
   Widget _buildUpateButton() {
     return ElevatedButton(
-      child: const Text('Update'),
       onPressed: update,
+      child: const Text('Update'),
     );
   }
 }

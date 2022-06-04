@@ -62,12 +62,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
           gender: genderCntlr.text.toLowerCase(),
         );
 
-        Navigator.push(
-          context,
-          CupertinoPageRoute(
-            builder: (context) => const ProfileImageScreen(),
-          ),
-        );
+        if (mounted) {
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => const ProfileImageScreen(),
+            ),
+          );
+        }
       }
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
@@ -143,7 +145,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         obscureText: true,
         maxLines: 1,
         controller: passwordCntlr,
-        textInputAction: TextInputAction.done,
+        textInputAction: TextInputAction.next,
         validator: Validators.passwordValidator,
       ),
     );
@@ -168,8 +170,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         backgroundColor:
             MaterialStateProperty.all(isLoading ? Colors.black38 : kBlue),
       ),
-      child: const Text('Create account'),
       onPressed: isLoading ? null : signUp,
+      child: const Text('Create account'),
     );
   }
 

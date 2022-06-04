@@ -9,7 +9,7 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class FireStorage {
   final _user = FirebaseAuth.instance.currentUser;
-  final _fireStore = FirebaseStorage.instance;
+  final _fireStorage = FirebaseStorage.instance;
   final CloudFire _cloudFire = CloudFire();
 
   Future<void> uploadProfileImage({
@@ -30,7 +30,7 @@ class FireStorage {
         // }
 
         if (image != null && _user?.uid != null) {
-          final ref = await _fireStore
+          final ref = await _fireStorage
               .ref()
               .child('users/${_user?.uid}/images/${_user?.uid}')
               .putFile(image);
@@ -48,14 +48,17 @@ class FireStorage {
   }
 
   Future<String> getPhotoUrl({required String fileRef}) async {
-    return await _fireStore.ref(fileRef).getDownloadURL();
+    return await _fireStorage.ref(fileRef).getDownloadURL();
   }
 
   Future<void> deleteProfileImage() async {
     try {
       final userId = _user?.uid;
       if (userId != null) {
-        await _fireStore.ref('users/$userId/images/$userId').delete();
+        final user = await _cloudFire.getUser(id: userId);
+        if (user?.photoURL != null) {
+          await _fireStorage.ref('users/$userId/images/$userId').delete();
+        }
         await _cloudFire.updatePhotoURL(photoUrl: null);
         await _user?.updatePhotoURL(null);
       }

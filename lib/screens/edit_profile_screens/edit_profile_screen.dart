@@ -32,7 +32,7 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   MyImagePicker myImagePicker = MyImagePicker();
-  final FirebaseAuth? _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final providerId =
       FirebaseAuth.instance.currentUser?.providerData[0].providerId;
   final userStream = CloudFire().userStream();
@@ -46,7 +46,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       EasyLoading.show();
 
       await FireStorage().uploadProfileImage(image: myImagePicker.image);
-      await _firebaseAuth?.currentUser?.reload();
+      await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
     } catch (e) {
@@ -61,11 +61,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     try {
       EasyLoading.show();
       await FireStorage().deleteProfileImage();
-      await _firebaseAuth?.currentUser?.reload();
+      await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {
         await CloudFire().updatePhotoURL(photoUrl: null);
-        await _firebaseAuth?.currentUser?.updatePhotoURL(null);
+        await _firebaseAuth.currentUser?.updatePhotoURL(null);
         return;
       }
       kShowSnackbar(context: context, message: e.message ?? '');
@@ -85,7 +85,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         kShowSnackbar(
           context: context,
           message:
-              'Password recovery instructions has been sent to ${_firebaseAuth?.currentUser?.email}',
+              'Password recovery instructions has been sent to ${_firebaseAuth.currentUser?.email}',
         );
       }
     } on FirebaseException catch (e) {
@@ -100,16 +100,26 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> deleteAccount() async {
     try {
+      Navigator.pop(context);
       EasyLoading.show();
+
       final validPassword = passwordKey.currentState?.validate();
 
       if (validPassword == true && passwordCntrl.text.isNotEmpty) {
         await FireAuth().deleteAccount(password: passwordCntrl.text);
 
         // Pop dialog and and current screen.
-        Navigator.of(context)
-          ..pop()
-          ..pop();
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
+      }
+
+      if (providerId == 'google.com') {
+        await FireAuth().deleteAccount(password: passwordCntrl.text);
+        // Pop dialog and and current screen.
+        if (mounted) {
+          Navigator.of(context).pop();
+        }
       }
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
@@ -150,11 +160,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           },
         ),
         TextButton(
+          onPressed: deleteAccount,
           child: const Text(
             'Delete',
             style: TextStyle(color: Colors.red),
           ),
-          onPressed: deleteAccount,
         ),
       ],
     );
@@ -228,14 +238,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       size: 50,
     );
 
-    if (_firebaseAuth!.currentUser?.photoURL != null) {
+    if (_firebaseAuth.currentUser?.photoURL != null) {
       image = CachedNetworkImageProvider(
-        _firebaseAuth!.currentUser!.photoURL!,
+        _firebaseAuth.currentUser!.photoURL!,
       );
       icon = Container();
     }
 
     return GestureDetector(
+      onTap: pickImage,
       child: Stack(
         children: [
           CircleAvatar(
@@ -253,7 +264,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           )
         ],
       ),
-      onTap: pickImage,
     );
   }
 
@@ -333,13 +343,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Container(
       alignment: Alignment.centerLeft,
       child: InkWell(
+        onTap: resetPassword,
         child: const Text(
           'Reset password',
           style: TextStyle(
             fontSize: 16,
           ),
         ),
-        onTap: resetPassword,
       ),
     );
   }
@@ -348,6 +358,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Container(
       alignment: Alignment.centerLeft,
       child: InkWell(
+        onTap: showDeleteDialog,
         child: const Text(
           'Delete account',
           style: TextStyle(
@@ -355,7 +366,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             color: Colors.red,
           ),
         ),
-        onTap: showDeleteDialog,
       ),
     );
   }

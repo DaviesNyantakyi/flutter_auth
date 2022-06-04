@@ -57,17 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
           builder: (context) => const WelcomeScreen(),
         ),
       );
-      if (mounted) {
-        setState(() {});
-      }
-      return;
+    } else {
+      await Navigator.push(
+        context,
+        CupertinoPageRoute(
+          builder: (context) => const EditProfileScreen(),
+        ),
+      );
     }
-    await Navigator.push(
-      context,
-      CupertinoPageRoute(
-        builder: (context) => const EditProfileScreen(),
-      ),
-    );
     if (mounted) {
       setState(() {});
     }
@@ -106,21 +103,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildLogoutButton() {
     return TextButton(
+      onPressed: logout,
       child: const Text(
         'LOGOUT',
         style: TextStyle(color: Colors.white),
       ),
-      onPressed: logout,
     );
   }
 
   Widget _buildEditButton() {
     return TextButton(
+      onPressed: edit,
       child: const Text(
         'EDIT PROFILE',
         style: TextStyle(color: Colors.white),
       ),
-      onPressed: edit,
     );
   }
 
@@ -214,8 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
           width: double.infinity,
           height: double.infinity,
           child: TextButton(
-            child: icon,
             onPressed: null,
+            child: icon,
           ),
         ),
       ),

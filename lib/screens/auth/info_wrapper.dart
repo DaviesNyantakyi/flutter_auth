@@ -61,7 +61,7 @@ class _InfoWrapperState extends State<InfoWrapper> {
             user: snapshot.data,
           );
         }
-        return const CircularProgressIndicator();
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -92,7 +92,7 @@ class _MissigInfoScreen extends StatefulWidget {
 
 class _MissigInfoScreenState extends State<_MissigInfoScreen> {
   MyImagePicker myImagePicker = MyImagePicker();
-  final FirebaseAuth? _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final userStream = CloudFire().userStream();
 
   TextEditingController passwordCntrl = TextEditingController();
@@ -107,7 +107,7 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
         image: myImagePicker.image,
         // delete: false,
       );
-      await _firebaseAuth?.currentUser?.reload();
+      await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
     } catch (e) {
@@ -122,11 +122,11 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
     try {
       EasyLoading.show();
       await FireStorage().deleteProfileImage();
-      await _firebaseAuth?.currentUser?.reload();
+      await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
       if (e.code == 'object-not-found') {
         await CloudFire().updatePhotoURL(photoUrl: null);
-        await _firebaseAuth?.currentUser?.updatePhotoURL(null);
+        await _firebaseAuth.currentUser?.updatePhotoURL(null);
         return;
       }
       kShowSnackbar(context: context, message: e.message ?? '');
@@ -187,14 +187,15 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
       size: 50,
     );
 
-    if (_firebaseAuth!.currentUser?.photoURL != null) {
+    if (_firebaseAuth.currentUser?.photoURL != null) {
       image = CachedNetworkImageProvider(
-        _firebaseAuth!.currentUser!.photoURL!,
+        _firebaseAuth.currentUser!.photoURL!,
       );
       icon = Container();
     }
 
     return GestureDetector(
+      onTap: pickImage,
       child: Stack(
         children: [
           CircleAvatar(
@@ -212,7 +213,6 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
           )
         ],
       ),
-      onTap: pickImage,
     );
   }
 

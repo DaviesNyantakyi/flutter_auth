@@ -6,7 +6,6 @@ import 'package:flutter_auth/screens/auth/auth_wrapper.dart';
 import 'package:flutter_auth/services/fire_storage.dart';
 import 'package:flutter_auth/utilities/image_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class ProfileImageScreen extends StatefulWidget {
   const ProfileImageScreen({Key? key}) : super(key: key);
@@ -123,6 +122,7 @@ class _ProfileImageScreenState extends State<ProfileImageScreen> {
 
     return Center(
       child: GestureDetector(
+        onTap: pickImage,
         child: Stack(
           children: [
             CircleAvatar(
@@ -140,15 +140,14 @@ class _ProfileImageScreenState extends State<ProfileImageScreen> {
             )
           ],
         ),
-        onTap: pickImage,
       ),
     );
   }
 
   Widget _buildContinueButton() {
     return ElevatedButton(
-      child: const Text('Continue'),
       onPressed: conitnueButton,
+      child: const Text('Continue'),
     );
   }
 }

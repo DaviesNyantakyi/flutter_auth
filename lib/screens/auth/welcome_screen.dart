@@ -24,13 +24,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   FireAuth fireAuth = FireAuth();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
-  bool? wasAnonymouse;
+  bool? isAnonymous;
 
   @override
   void initState() {
-    wasAnonymouse = auth.currentUser?.isAnonymous;
+    isAnonymous = firebaseAuth.currentUser?.isAnonymous;
+    setState(() {});
     super.initState();
   }
 
@@ -38,7 +39,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void dispose() {
     emailCntlr.dispose();
     passwordCntlr.dispose();
-    wasAnonymouse = null;
+    isAnonymous = null;
     super.dispose();
   }
 
@@ -57,8 +58,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           password: passwordCntlr.text,
         );
 
-        if (wasAnonymouse == true) {
-          Navigator.pop(context);
+        if (isAnonymous == true) {
+          if (mounted) {
+            Navigator.pop(context);
+          }
         }
       }
     } on FirebaseException catch (e) {
@@ -81,7 +84,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       if (mounted) {
         setState(() {});
       }
-      await fireAuth.loginGoogle();
+      final result = await fireAuth.loginGoogle();
+
+      if (result != null && isAnonymous == true) {
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      }
     } on FirebaseException catch (e) {
       kShowSnackbar(context: context, message: e.message ?? '');
     } catch (e) {
@@ -96,7 +105,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> skip() async {
-    if (auth.currentUser != null) {
+    if (firebaseAuth.currentUser != null) {
       Navigator.pop(context);
       return;
     }
@@ -155,15 +164,38 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildSkipButton() {
+    // If user is already anon, the skip button is hidden.
+
+    Widget child = const Text(
+      'SKIP',
+      style: TextStyle(color: Colors.black),
+    );
+    if (isAnonymous == true) {
+      child = IconButton(
+        onPressed: () => Navigator.pop(context),
+        icon: const Icon(
+          Icons.close,
+          color: Colors.black,
+        ),
+      );
+    }
     return TextButton(
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.transparent),
       ),
-      onPressed: isLoading ? null : skip,
-      child: const Text(
-        'SKIP',
-        style: TextStyle(color: Colors.black),
-      ),
+      onPressed: () async {
+        if (isAnonymous == true) {
+          Navigator.pop(context);
+        }
+
+        if (isLoading == false && isAnonymous == null ||
+            isLoading == false && isAnonymous == false) {
+          return await skip();
+        } else {
+          return;
+        }
+      },
+      child: child,
     );
   }
 
@@ -188,7 +220,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         controller: passwordCntlr,
         maxLines: 1,
         obscureText: true,
-        textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.done,
+        onSubmitted: (value) async {
+          if (isLoading) {
+            return;
+          } else {
+            await login();
+          }
+        },
         validator: Validators.passwordValidator,
       ),
     );
