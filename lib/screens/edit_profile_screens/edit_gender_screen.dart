@@ -8,7 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EditGenderScreen extends StatefulWidget {
   final String gender;
-  const EditGenderScreen({Key? key, required this.gender}) : super(key: key);
+  const EditGenderScreen({super.key, required this.gender});
 
   @override
   State<EditGenderScreen> createState() => _EditGenderScreenState();
@@ -48,8 +48,8 @@ class _EditGenderScreenState extends State<EditGenderScreen> {
         Navigator.pop(context);
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
-    } catch (e) {
+     Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));    } catch (e) {
       debugPrint(e.toString());
     } finally {
       EasyLoading.dismiss();

@@ -9,7 +9,7 @@ import 'package:flutter_auth/widgets/textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({Key? key}) : super(key: key);
+  const WelcomeScreen({super.key});
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -65,7 +65,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(
+        Duration.zero,
+        () => kShowSnackbar(context: context, message: e.message ?? ''),
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -92,7 +95,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         }
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(
+        Duration.zero,
+        () => kShowSnackbar(context: context, message: e.message ?? ''),
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -114,7 +120,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       EasyLoading.show();
       await fireAuth.loginAnonymous();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(
+        Duration.zero,
+        () => kShowSnackbar(context: context, message: e.message ?? ''),
+      );
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -255,8 +264,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           isLoading ? Colors.black45 : Colors.red,
         ),
       ),
-      icon: const Icon(Icons.abc),
-      label: const Text('Continue with Google'),
+      icon: const Icon(
+        Icons.abc,
+        color: Colors.white,
+      ),
+      label: const Text(
+        'Continue with Google',
+        style: TextStyle(color: Colors.white),
+      ),
       onPressed: loginGoogle,
     );
   }
@@ -266,8 +281,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(Colors.black45),
       ),
-      icon: const Icon(Icons.email_outlined),
-      label: const Text('Continue with Email'),
+      icon: const Icon(
+        Icons.email_outlined,
+        color: Colors.white,
+      ),
+      label: const Text(
+        'Continue with Email',
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      ),
       onPressed: () {
         Navigator.push(
           context,

@@ -7,7 +7,7 @@ import 'package:flutter_auth/widgets/textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EditNameScreen extends StatefulWidget {
-  const EditNameScreen({Key? key}) : super(key: key);
+  const EditNameScreen({super.key});
 
   @override
   State<EditNameScreen> createState() => _EditNameScreenState();
@@ -49,7 +49,8 @@ class _EditNameScreenState extends State<EditNameScreen> {
         Navigator.pop(context);
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {

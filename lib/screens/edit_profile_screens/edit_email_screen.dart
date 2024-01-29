@@ -8,7 +8,7 @@ import 'package:flutter_auth/widgets/textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EditEmailScreen extends StatefulWidget {
-  const EditEmailScreen({Key? key}) : super(key: key);
+  const EditEmailScreen({super.key});
 
   @override
   State<EditEmailScreen> createState() => _EditEmailScreenState();
@@ -108,8 +108,8 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
         }
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message!);
-    } catch (e) {
+     Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));    } catch (e) {
       debugPrint(e.toString());
     } finally {
       EasyLoading.dismiss();
@@ -144,9 +144,9 @@ class _EditEmailScreenState extends State<EditEmailScreen> {
   }
 
   Widget _buildHeaderText() {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         Text(
           'Changing your email address is a permanent',
         ),

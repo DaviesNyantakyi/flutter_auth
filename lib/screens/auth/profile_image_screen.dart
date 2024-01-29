@@ -8,7 +8,7 @@ import 'package:flutter_auth/utilities/image_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ProfileImageScreen extends StatefulWidget {
-  const ProfileImageScreen({Key? key}) : super(key: key);
+  const ProfileImageScreen({super.key});
 
   @override
   State<ProfileImageScreen> createState() => _ProfileImageScreenState();
@@ -38,7 +38,8 @@ class _ProfileImageScreenState extends State<ProfileImageScreen> {
       );
       await auth.currentUser?.reload();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -53,7 +54,8 @@ class _ProfileImageScreenState extends State<ProfileImageScreen> {
       await FireStorage().deleteProfileImage();
       await auth.currentUser?.reload();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {

@@ -10,7 +10,7 @@ import 'package:flutter_auth/widgets/textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  const CreateAccountScreen({Key? key}) : super(key: key);
+  const CreateAccountScreen({super.key});
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
@@ -72,7 +72,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         }
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(
+        Duration.zero,
+        () => kShowSnackbar(context: context, message: e.message ?? ''),
+      );
       debugPrint(e.toString());
     } finally {
       isLoading = false;
@@ -171,7 +174,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
             MaterialStateProperty.all(isLoading ? Colors.black38 : kBlue),
       ),
       onPressed: isLoading ? null : signUp,
-      child: const Text('Create account'),
+      child: const Text(
+        'Create account',
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 

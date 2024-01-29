@@ -21,21 +21,21 @@ class MyImagePicker {
   final ImagePicker _picker = ImagePicker();
 
   // Cropp the image using the file path
-  Future<File?> imageCropper({File? file}) async {
-    String? title = 'EDIT PHOTO';
+  Future<CroppedFile?> imageCropper({File? file}) async {
+    // String? title = 'EDIT PHOTO';
     return await ImageCropper().cropImage(
       sourcePath: file!.path,
-      androidUiSettings: AndroidUiSettings(
-        toolbarColor: kGreyLight,
-        toolbarTitle: title,
-        initAspectRatio: CropAspectRatioPreset.original,
-        lockAspectRatio: false,
-        hideBottomControls: true,
-      ),
-      iosUiSettings: IOSUiSettings(
-        title: title,
-        minimumAspectRatio: 1.0,
-      ),
+      // androidUiSettings: AndroidUiSettings(
+      //   toolbarColor: kGreyLight,
+      //   toolbarTitle: title,
+      //   initAspectRatio: CropAspectRatioPreset.original,
+      //   lockAspectRatio: false,
+      //   hideBottomControls: true,
+      // ),
+      // iosUiSettings: IOSUiSettings(
+      //   title: title,
+      //   minimumAspectRatio: 1.0,
+      // ),
     );
   }
 
@@ -56,14 +56,17 @@ class MyImagePicker {
         }
         // If the permission permanlty denied showdialog
         if (status == PermissionStatus.permanentlyDenied) {
-          await _showPermissionDialog(
-            headerWidget: const Icon(
-              Icons.folder,
-              color: Colors.white,
-              size: 32,
+          await Future.delayed(
+            Duration.zero,
+            () => _showPermissionDialog(
+              headerWidget: const Icon(
+                Icons.folder,
+                color: Colors.white,
+                size: 32,
+              ),
+              context: context,
+              instructions: 'Tap Settings > Permissions, and turn on Storage',
             ),
-            context: context,
-            instructions: 'Tap Settings > Permissions, and turn on Storage',
           );
         }
         return selectedImage;
@@ -86,30 +89,33 @@ class MyImagePicker {
         // Ask to enable permission if permanlty denied.
         if (statusStorage == PermissionStatus.permanentlyDenied ||
             statusCamera == PermissionStatus.permanentlyDenied) {
-          await _showPermissionDialog(
-            headerWidget: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(
-                  Icons.photo_camera_outlined,
-                  color: Colors.white,
-                  size: 32,
-                ),
-                Icon(
-                  Icons.add_outlined,
-                  color: Colors.white,
-                  size: 32,
-                ),
-                Icon(
-                  Icons.folder_outlined,
-                  color: Colors.white,
-                  size: 32,
-                ),
-              ],
+          await Future.delayed(
+            Duration.zero,
+            () => _showPermissionDialog(
+              headerWidget: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.photo_camera_outlined,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                  Icon(
+                    Icons.add_outlined,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                  Icon(
+                    Icons.folder_outlined,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ],
+              ),
+              context: context,
+              instructions:
+                  'Tap Settings > Permissions, and turn on Camera and Storage',
             ),
-            context: context,
-            instructions:
-                'Tap Settings > Permissions, and turn on Camera and Storage',
           );
         }
         return selectedImage;
@@ -144,10 +150,13 @@ class MyImagePicker {
                     final pickedFile =
                         await _pickImage(context: context, source: source);
                     if (pickedFile?.path != null) {
-                      image = await imageCropper(file: File(pickedFile!.path));
+                      // image = await imageCropper(file: File(pickedFile!.path));
                     }
                     _delete = false;
-                    Navigator.pop(context, _delete);
+                    Future.delayed(
+                      Duration.zero,
+                      () => Navigator.pop(context, _delete),
+                    );
                   },
                 ),
                 _selectionTile(
@@ -159,10 +168,11 @@ class MyImagePicker {
                     final pickedFile =
                         await _pickImage(context: context, source: source);
                     if (pickedFile?.path != null) {
-                      image = await imageCropper(file: File(pickedFile!.path));
+                      // image = await imageCropper(file: File(pickedFile!.path));
                     }
                     _delete = false;
-                    Navigator.pop(context, _delete);
+                    Future.delayed(
+                        Duration.zero, () => Navigator.pop(context, _delete));
                   },
                 ),
                 showDeleteButton(context: context)

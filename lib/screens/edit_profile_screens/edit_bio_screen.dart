@@ -8,7 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class EditBioScreen extends StatefulWidget {
   final String bio;
-  const EditBioScreen({Key? key, required this.bio}) : super(key: key);
+  const EditBioScreen({super.key, required this.bio});
 
   @override
   State<EditBioScreen> createState() => _EditBioScreenState();
@@ -49,7 +49,8 @@ class _EditBioScreenState extends State<EditBioScreen> {
         Navigator.pop(context);
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {

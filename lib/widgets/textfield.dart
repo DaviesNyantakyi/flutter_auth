@@ -24,7 +24,7 @@ class CustomTextFormField extends StatelessWidget {
   final AutovalidateMode? validateMode;
 
   const CustomTextFormField({
-    Key? key,
+    super.key,
     this.hintText,
     this.initialValue,
     this.maxLines,
@@ -44,7 +44,7 @@ class CustomTextFormField extends StatelessWidget {
     this.suffixIcon,
     this.readOnly = false,
     this.validateMode = AutovalidateMode.onUserInteraction,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

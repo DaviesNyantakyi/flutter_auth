@@ -15,18 +15,18 @@ Future<void> main() async {
     ..maskType = EasyLoadingMaskType.black
     ..userInteractions = true
     ..dismissOnTap = false;
-
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const AuthWrapper(),
       builder: EasyLoading.init(),
+      debugShowCheckedModeBanner: false,
       routes: {
         AuthWrapper.authWrapper: (context) => const AuthWrapper(),
       },

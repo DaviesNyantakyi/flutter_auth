@@ -6,7 +6,7 @@ import 'package:flutter_auth/screens/home_screen.dart';
 
 class AuthWrapper extends StatefulWidget {
   static String authWrapper = 'authWrapper';
-  const AuthWrapper({Key? key}) : super(key: key);
+  const AuthWrapper({super.key});
 
   @override
   State<AuthWrapper> createState() => _AuthWrapperState();
@@ -39,7 +39,7 @@ class _AuthWrapperState extends State<AuthWrapper> {
 }
 
 class UserInfoWrapper extends StatefulWidget {
-  const UserInfoWrapper({Key? key}) : super(key: key);
+  const UserInfoWrapper({super.key});
 
   @override
   State<UserInfoWrapper> createState() => _UserInfoWrapperState();

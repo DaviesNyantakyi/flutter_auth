@@ -24,7 +24,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 // 5: Update profile.
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({Key? key}) : super(key: key);
+  const EditProfileScreen({super.key});
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -48,7 +48,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       await FireStorage().uploadProfileImage(image: myImagePicker.image);
       await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -68,7 +69,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         await _firebaseAuth.currentUser?.updatePhotoURL(null);
         return;
       }
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -82,14 +84,17 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       EasyLoading.show();
       bool sent = await FireAuth().sendPasswordReset();
       if (sent) {
-        kShowSnackbar(
-          context: context,
-          message:
-              'Password recovery instructions has been sent to ${_firebaseAuth.currentUser?.email}',
-        );
+        Future.delayed(
+            Duration.zero,
+            () => kShowSnackbar(
+                  context: context,
+                  message:
+                      'Password recovery instructions has been sent to ${_firebaseAuth.currentUser?.email}',
+                ));
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -122,7 +127,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         }
       }
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {

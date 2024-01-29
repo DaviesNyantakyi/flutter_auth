@@ -17,7 +17,7 @@ import 'package:flutter_auth/widgets/textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class InfoWrapper extends StatefulWidget {
-  const InfoWrapper({Key? key}) : super(key: key);
+  const InfoWrapper({super.key});
 
   @override
   State<InfoWrapper> createState() => _InfoWrapperState();
@@ -84,7 +84,7 @@ class _InfoWrapperState extends State<InfoWrapper> {
 
 class _MissigInfoScreen extends StatefulWidget {
   final UserModel? user;
-  const _MissigInfoScreen({Key? key, this.user}) : super(key: key);
+  const _MissigInfoScreen({this.user});
 
   @override
   State<_MissigInfoScreen> createState() => _MissigInfoScreenState();
@@ -109,7 +109,8 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
       );
       await _firebaseAuth.currentUser?.reload();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {
@@ -129,7 +130,8 @@ class _MissigInfoScreenState extends State<_MissigInfoScreen> {
         await _firebaseAuth.currentUser?.updatePhotoURL(null);
         return;
       }
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
     } catch (e) {
       debugPrint(e.toString());
     } finally {

@@ -12,7 +12,7 @@ import 'package:flutter_auth/constant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -37,7 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       await FireAuth().logout();
     } on FirebaseException catch (e) {
-      kShowSnackbar(context: context, message: e.message ?? '');
+      Future.delayed(Duration.zero,
+          () => kShowSnackbar(context: context, message: e.message ?? ''));
       debugPrint(e.toString());
     } catch (e) {
       debugPrint(e.toString());
@@ -102,11 +103,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildLogoutButton() {
-    return TextButton(
+    return ElevatedButton(
       onPressed: logout,
       child: const Text(
         'LOGOUT',
-        style: TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.black),
       ),
     );
   }
@@ -138,8 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _buildCloudUserInfo() {
     const text = 'Cloud Firestore';
     if (auth.currentUser?.isAnonymous == true) {
-      return Column(
-        children: const [
+      return const Column(
+        children: [
           Padding(
             padding: EdgeInsets.all(8.0),
             child: Text(
